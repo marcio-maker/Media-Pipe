@@ -119,7 +119,6 @@
   }
   
   function calculaFormatoRosto(landmarks) {
-    // Apenas 5 pontos-chave
     const larguraBochecha = distancia(landmarks[234], landmarks[454]);
     const larguraTesta = distancia(landmarks[93], landmarks[323]);
     const maxilar = distancia(landmarks[172], landmarks[397]);
@@ -184,7 +183,6 @@
       ctx.setLineDash([5, 5]);
       ctx.beginPath();
 
-      // Apenas o contorno externo (indice 0-16 face oval, 234-454 largura etc.)
       [ 127, 34, 139, 50, 101, 11, 330, 279, 294, 278, 424, 396, 175, 152, 148, 7 ]
       .forEach((i, idx, arr) => {
         const p = landmarks[i];
@@ -210,6 +208,9 @@
 
     } else {
       document.getElementById('formato-rosto').innerText = "Rosto não detectado.";
+      document.getElementById('sugestao-corte').innerText = "Aguardando avaliação...";
+      document.getElementById('sugestao-evitar').innerText = "";
+      document.getElementById('sugestao-produto').innerText = "Aguardando avaliação...";
     }
     ctx.restore();
   });
