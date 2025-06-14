@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Hair by Marcio - Diagnóstico Facial</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     body {
       font-family:'Inter', sans-serif;
@@ -22,7 +22,6 @@
     }
     header h1 {
       font-size: 2.2rem;
-      font-weight: 700;
       color: #e0b973;
       margin: 0;
     }
@@ -31,19 +30,13 @@
       margin: 0 auto;
       padding: 0 16px 32px 16px;
     }
-    .media-section {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 32px;
-    }
     video, canvas {
       width: 100%;
       max-width: 480px;
       border-radius: 16px;
       box-shadow: 0 0 24px #e0b97355;
       background: #222;
+      margin-bottom: 32px;
     }
     .cards {
       display: flex;
@@ -62,43 +55,11 @@
       box-shadow: 0 4px 24px #0002;
       padding: 24px 18px;
       flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
       border: 1.5px solid #e0b97333;
-      transform: translateY(20px);
-      opacity: 0;
-    }
-    .card.active {
-      animation: fadeIn 0.6s ease forwards;
-    }
-    @keyframes fadeIn {
-      from { transform: translateY(20px);opacity: 0 }
-      to { transform: translateY(0);opacity: 1 }
     }
     .card h2 {
-      font-size: 1.1rem;
       color: #e0b973;
       margin-bottom: 10px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
-    .card p, .card ul {
-      font-size: 1rem;
-      color: #f5f5f7;
-      margin: 0 0 8px 0;
-    }
-    .card a {
-      color: #e0b973;
-      text-decoration: none;
-      font-weight: 500;
-      margin-top: 8px;
-      transition: color 0.2s;
-    }
-    .card a:hover {
-      color: #fff;
-      text-decoration: underline;
     }
     button {
       margin-bottom: 32px;
@@ -120,26 +81,26 @@
     <h1>Hair by Marcio - Diagnóstico Facial</h1>
   </header>
   <main>
-    <div class="media-section">
-      <video id="video" autoplay muted playsinline></video>
-      <canvas id="canvas"></canvas>
-    </div>
+    <video id="video" autoplay muted playsinline></video>
+    <canvas id="canvas"></canvas>
+
     <div class="cards">
-      <div class="card" id="card-formato">
+      <div class="card">
         <h2>Formato do Rosto</h2>
         <p id="formato-rosto">Aguardando avaliação...</p>
       </div>
-      <div class="card" id="card-corte">
+      <div class="card">
         <h2>Sugestão de Corte</h2>
         <p id="sugestao-corte">Aguardando avaliação...</p>
         <p id="sugestao-evitar"></p>
       </div>
-      <div class="card" id="card-produto">
+      <div class="card">
         <h2>Produto de Finalização</h2>
         <p id="sugestao-produto">Aguardando avaliação...</p>
         <a id="link-produto" href="#" target="_blank" rel="noopener">Ver no Mercado Livre</a>
       </div>
     </div>
+
     <br>
     <button id="salvar">Salvar resultado como imagem</button>
   </main>
@@ -152,70 +113,53 @@
   const video = document.getElementById('video');
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
-  
-  // Distância entre dois points
+
   function distancia(a, b) {
     return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));  
   }
   
-  // Cálculo do formado do rosto
   function calculaFormatoRosto(landmarks) {
-    const larguraTesta = distancia(landmarks[234], landmarks[454]);
-    const larguraBochecha = distancia(landmarks[93], landmarks[323]);
-    const larguraMaxilar = distancia(landmarks[172], landmarks[397]);
-    const alturaRosto = distancia(landmarks[10], landmarks[152]);
+    // Apenas 5 pontos-chave
+    const larguraBochecha = distancia(landmarks[234], landmarks[454]);
+    const larguraTesta = distancia(landmarks[93], landmarks[323]);
+    const maxilar = distancia(landmarks[172], landmarks[397]);
+    const altura = distancia(landmarks[10], landmarks[152]);
 
-    if (Math.abs(larguraBochecha - larguraMaxilar) < 0.03 &&
-        Math.abs(larguraBochecha - larguraTesta) < 0.03 &&
-        alturaRosto / larguraBochecha < 1.1) {
+    if (Math.abs(larguraBochecha - maxilar) < 0.05 && altura / larguraBochecha < 1.1) {
       return "Redondo";
     }
-    if (Math.abs(larguraBochecha - larguraMaxilar) < 0.03 &&
-        Math.abs(laguraBochecha - larguraTesta) < 0.03 &&
-        alturaRosto / larguraBochecha >= 1.1) {
-      return "Quadrado";
-    }
-    if (alturaRosto / larguraBochecha > 1.5) {
+    if (altura / larguraBochecha > 1.5) {
       return "Retangular";
     }
-    if (larguraBochecha > larguraTesta && larguraBochecha > larguraMaxilar) {
+    if (larguraBochecha > maxilar && larguraBochecha > larguraTesta) {
       return "Diamante";
     }
-    if (larguraTesta > larguraBochecha && larguraTesta > larguraMaxilar) {
+    if (larguraTesta > larguraBochecha && larguraTesta > maxilar) {
       return "Coração";
     }
-    if (alturaRosto / larguraBochecha > 1.3 && larguraBochecha > larguraMaxilar) {
-      return "Oval";
-    }
-    return "Indefinido";
+    return "Oval";
   }
   
-  //Sugestão de corte
   function sugestaoCorte(formato) {
     const sugestoes = {
-      Oval: {corte:"Quase todos estilos caem bem.",evitar:"Franjas muito pesadas."},
+      Oval: {corte:"Quase todos os estilos caem bem.",evitar:"Franjas muito pesadas."},
       Redondo: {corte:"Cortes que criam volume no topo.",evitar:"Volume nas laterais."},
-      Quadrado: {corte:"Cortes com topo levemente volumoso.",evitar:"Cortes muito retos."},
-      Retangular: {corte:"Franja ou volume nas laterais.",evitar:"Topetes muito altos."},
-      Coração: {corte:"Cortes que deixem volume na parte de baixo.",evitar:"Penteados muito altos."},
-      Diamante: {corte:"Franja na testa e volume nas laterais.",evitar:"Penteados puxados para trás."},
-      Indefinido: {corte:"Melhor mover o rosto para avaliação.",evitar:""}
+      Coração: {corte:"Franja na testa e volume nas laterais.",evitar:"Topetes muito altos."},
+      Retangular: {corte:"Franja ou volume nas laterais.",evitar:"Cabelos muito puxados pra trás."},
+      Diamante: {corte:"Franja e volume nas laterais.",evitar:"Muito volume no topo."},
     };
-    return sugestoes[formato] || sugestoes.Indefinido;
+    return sugestoes[formato] || {corte:'Corte médio, básico',evitar:'Não usar nada muito pesado'};
   }
   
-  //Sugestão de finalização
   function sugestaoProdutoFinalizacao(formato) {
     const produtos = {
       Oval: { nome:'Mousse Modelador', link:'https://www.mercadolivre.com.br/' },
       Redondo: { nome:'Gel de Volume', link:'https://www.mercadolivre.com.br/' },
-      Quadrado: { nome:'Cera Modeladora', link:'https://www.mercadolivre.com.br/' },
-      Retangular: { nome:'Creme Texturizador', link:'https://www.mercadolivre.com.br/' },
       Coração: { nome:'Finalizador Leve', link:'https://www.mercadolivre.com.br/' },
-      Diamante: { nome:'Pomada Modeladora', link:'https://www.mercadolivre.com.br/' },
-      Indefinido: { nome:'Produto Neutro', link:'https://www.mercadolivre.com.br/' }
+      Retangular: { nome:'Creme Texturizador', link:'https://www.mercadolivre.com.br/' },
+      Diamante: { nome:'Pomada Modeladora', link:'https://www.mercadolivre.com.br/' }
     };
-    return produtos[formato] || produtos.Indefinido;
+    return produtos[formato] || { nome:'Produto Neutro', link:'https://www.mercadolivre.com.br/' };
   }
   
   const faceMesh = new FaceMesh({ 
@@ -228,42 +172,41 @@
     canvas.height = video.videoHeight;
 
     ctx.save();
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.translate(canvas.width, 0);
+    ctx.scale(-1, 1);
     ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
 
     if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
       const landmarks = results.multiFaceLandmarks[0];
-      // Desenha contorno pontilhado
-      ctx.strokeStyle = "#0ff";
+      // Desenha contorno externo como pontilhado
+      ctx.strokeStyle = "#e0b973";
       ctx.lineWidth = 2;
       ctx.setLineDash([5, 5]);
       ctx.beginPath();
-      landmarks.forEach((point, idx) => {
-        const x = point.x * canvas.width;
-        const y = point.y * canvas.height;
-        if (idx === 0) ctx.moveTo(x, y);
+
+      // Apenas o contorno externo (indice 0-16 face oval, 234-454 largura etc.)
+      [ 127, 34, 139, 50, 101, 11, 330, 279, 294, 278, 424, 396, 175, 152, 148, 7 ]
+      .forEach((i, idx, arr) => {
+        const p = landmarks[i];
+        const x = p.x * canvas.width;
+        const y = p.y * canvas.height;
+        if (idx===0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       });
+
       ctx.closePath();
       ctx.stroke();
 
-      // Analisa o formado do rosto
+      // Cálculo do rosto
       const formado = calculaFormatoRosto(landmarks);
       const { corte, evitar } = sugestaoCorte(formado);
       const finalizacao = sugestaoProdutoFinalizacao(formado);
   
-      // Atualiza o HTML
       document.getElementById('formato-rosto').innerText = formado;
       document.getElementById('sugestao-corte').innerText = corte;
       document.getElementById('sugestao-evitar').innerText = "Evitar: " + evitar;
       document.getElementById('sugestao-produto').innerText = finalizacao.nome;
       document.getElementById('link-produto').href = finalizacao.link;
-
-      document.querySelectorAll('.card').forEach(card => {
-        card.classList.remove('active'); // reseta
-        void card.offsetWidth; // restart
-        card.classList.add('active'); // anima
-      });
 
     } else {
       document.getElementById('formato-rosto').innerText = "Rosto não detectado.";
