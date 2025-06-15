@@ -108,16 +108,6 @@
       pointer-events: none;
     }
     
-    .web-effect {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 5;
-    }
-    
     .analysis-section {
       display: flex;
       flex-direction: column;
@@ -284,6 +274,7 @@
       text-align: center;
     }
     
+    /* Efeito de contorno diferente */
     .face-outline {
       position: absolute;
       top: 0;
@@ -293,6 +284,7 @@
       pointer-events: none;
     }
     
+    /* Efeito de pulsação para os landmarks */
     @keyframes pulse {
       0% { transform: scale(1); opacity: 0.8; }
       50% { transform: scale(1.1); opacity: 1; }
@@ -313,7 +305,6 @@
           <video id="video" autoplay muted playsinline></video>
           <canvas id="canvas"></canvas>
           <canvas id="faceOutline" class="face-outline"></canvas>
-          <canvas id="webEffect" class="web-effect"></canvas>
         </div>
         
         <div class="card">
@@ -415,10 +406,8 @@
   const video = document.getElementById('video');
   const canvas = document.getElementById('canvas');
   const faceOutline = document.getElementById('faceOutline');
-  const webCanvas = document.getElementById('webEffect');
   const ctx = canvas.getContext('2d');
   const outlineCtx = faceOutline.getContext('2d');
-  const webCtx = webCanvas.getContext('2d');
   let currentResultImage = null;
 
   // Cores para diferentes regiões faciais
@@ -428,13 +417,12 @@
     eyes: '#4CAF50',
     nose: '#2196F3',
     mouth: '#9C27B0',
-    outline: 'rgba(224, 185, 115, 0.7)',
-    webLine: 'rgba(224, 185, 115, 0.3)',
-    webPoint: 'rgba(224, 185, 115, 0.8)'
+    outline: 'rgba(224, 185, 115, 0.7)'
   };
 
   // Landmarks por região (índices baseados no MediaPipe Face Mesh)
   const landmarkRegions = {
+    // Contorno completo do rosto (pontos que circundam todo o rosto)
     contour: [
       10,  338, 297, 332, 284, 251, 389, 356, 454, 323,
       361, 288, 397, 365, 379, 378, 400, 377, 152, 148,
@@ -450,19 +438,10 @@
     mouthInner: [78, 191, 80, 81, 82, 13, 312, 311, 310, 415]
   };
 
-  // Pontos estratégicos para o efeito de teia
-  const webLandmarks = [
-    10, 152, 93, 323, 234, 454, 172, 397,  // Contorno
-    168, 6, 197, 2,  // Nariz
-    33, 133, 362, 263,  // Olhos
-    61, 291, 78, 308  // Boca
-  ];
-
   function drawLandmarks(landmarks) {
     // Limpa os canvases
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     outlineCtx.clearRect(0, 0, faceOutline.width, faceOutline.height);
-    webCtx.clearRect(0, 0, webCanvas.width, webCanvas.height);
     
     // Desenha o contorno estilizado primeiro
     drawStylizedOutline(landmarks);
@@ -507,48 +486,43 @@
       }
       ctx.stroke();
     });
-    
-    // Desenha o efeito de teia
-    drawWebEffect(landmarks);
   }
 
- 
   function drawStylizedOutline(landmarks) {
-    // Configurar estilo de traço pontilhado
-    outlineCtx.lineWidth = 2;
-    outlineCtx.lineCap = 'round';
-    outlineCtx.lineJoin = 'round';
-    outlineCtx.setLineDash([5, 5]);
+    // Configurações para o contorno estilizado
     outlineCtx.strokeStyle = landmarkColors.outline;
-
-    // Desenha o contorno principal como pontilhado
+    outlineCtx.lineWidth = 4;
+    outlineCtx.lineJoin = 'round';
+    outlineCtx.lineCap = 'round';
+    outlineCtx.shadowBlur = 15;
+    outlineCtx.shadowColor = landmarkColors.outline;
+    
+    // Desenha o contorno principal
     outlineCtx.beginPath();
     landmarkRegions.contour.forEach((i, idx) => {
       const p = landmarks[i];
       const x = p.x * faceOutline.width;
       const y = p.y * faceOutline.height;
-
+      
       if (idx === 0) outlineCtx.moveTo(x, y);
       else outlineCtx.lineTo(x, y);
     });
     outlineCtx.closePath();
     outlineCtx.stroke();
-
-    // Volta ao estilo normal pra outras linhas
-    outlineCtx.setLineDash([]);
-
-    // Desenha algumas linhas internas pra dar um estilo a mais
-    outlineCtx.lineWidth = 1;
-    outlineCtx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+    
+    // Desenha linhas internas decorativas
+    outlineCtx.lineWidth = 2;
+    outlineCtx.strokeStyle = 'rgba(255,255,255,0.5)';
     outlineCtx.shadowBlur = 0;
-
+    
+    // Linhas conectando pontos opostos no rosto
     const oppositePoints = [
-      [10, 152],
-      [93, 323],
-      [234, 454],
-      [172, 397]
+      [10, 152],  // Topo da cabeça ao queixo
+      [93, 323],  // Laterais da testa
+      [234, 454], // Maçãs do rosto
+      [172, 397]  // Pontos do queixo
     ];
-
+    
     oppositePoints.forEach(pair => {
       const p1 = landmarks[pair[0]];
       const p2 = landmarks[pair[1]];
@@ -557,56 +531,6 @@
       outlineCtx.lineTo(p2.x * faceOutline.width, p2.y * faceOutline.height);
       outlineCtx.stroke();
     });
-  }
-
-  function drawWebEffect(landmarks) {
-    const MAX_DISTANCE = 150;
-    const points = [];
-    
-    // Coleta os pontos para a teia
-    webLandmarks.forEach(i => {
-      const p = landmarks[i];
-      points.push({
-        x: p.x * webCanvas.width,
-        y: p.y * webCanvas.height,
-        id: i
-      });
-    });
-    
-    // Desenha as conexões
-    webCtx.strokeStyle = landmarkColors.webLine;
-    webCtx.lineWidth = 0.5;
-    
-    for (let i = 0; i < points.length; i++) {
-      for (let j = i + 1; j < points.length; j++) {
-        const dx = points[i].x - points[j].x;
-        const dy = points[i].y - points[j].y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        
-        if (distance < MAX_DISTANCE) {
-          // Ajusta a opacidade baseada na distância
-          const opacity = 1 - (distance / MAX_DISTANCE);
-          webCtx.globalAlpha = opacity * 0.5;
-          
-          webCtx.beginPath();
-          webCtx.moveTo(points[i].x, points[i].y);
-          webCtx.lineTo(points[j].x, points[j].y);
-          webCtx.stroke();
-        }
-      }
-    }
-    
-    // Desenha os pontos
-    webCtx.fillStyle = landmarkColors.webPoint;
-    webCtx.globalAlpha = 0.8;
-    points.forEach(point => {
-      webCtx.beginPath();
-      webCtx.arc(point.x, point.y, 2, 0, Math.PI * 2);
-      webCtx.fill();
-    });
-    
-    // Reseta a opacidade
-    webCtx.globalAlpha = 1.0;
   }
 
   function calculateFaceShape(landmarks) {
@@ -711,7 +635,7 @@
     };
   }
 
-  const faceMesh = new FaceMesh({ 
+    const faceMesh = new FaceMesh({ 
     locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
   });
 
@@ -731,8 +655,6 @@
       canvas.height = video.videoHeight;
       faceOutline.width = video.videoWidth;
       faceOutline.height = video.videoHeight;
-      webCanvas.width = video.videoWidth;
-      webCanvas.height = video.videoHeight;
       
       // Desenha os landmarks
       drawLandmarks(landmarks);
@@ -802,8 +724,6 @@
       canvas.height = video.videoHeight;
       faceOutline.width = video.videoWidth;
       faceOutline.height = video.videoHeight;
-      webCanvas.width = video.videoWidth;
-      webCanvas.height = video.videoHeight;
     }
   });
 </script>
