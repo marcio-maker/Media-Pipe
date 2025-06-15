@@ -2,108 +2,410 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Hair by Marcio - Diagnóstico Facial</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hair by Marcio - Diagnóstico Facial Avançado</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
-      font-family:'Inter', sans-serif;
-      background:linear-gradient(135deg,#232526 0%,#414345 100%);
-      color:#f5f5f7;
-      margin:0;
-      min-height:100vh;
+    :root {
+      --gold: #e0b973;
+      --gold-light: rgba(224, 185, 115, 0.2);
+      --dark: #232526;
+      --darker: #161718;
+      --light: #f5f5f7;
+      --gray: #8e8e93;
     }
-    header {
-      background:rgba(30, 30, 40, 0.95);
-      padding:32px 0 24px 0;
-      box-shadow:0 2px 16px rgba(0,0,0,0.12);
-      text-align:center;
-      margin-bottom:32px;
-    }
-    header h1 {
-      font-size: 2.2rem;
-      color: #e0b973;
+    
+    * {
+      box-sizing: border-box;
       margin: 0;
+      padding: 0;
     }
-    main {
-      max-width: 540px;
-      margin: 0 auto;
-      padding: 0 16px 32px 16px;
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, var(--dark) 0%, #414345 100%);
+      color: var(--light);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding-bottom: 40px;
     }
-    video, canvas {
-      width: 100%;
-      max-width: 480px;
-      border-radius: 16px;
-      box-shadow: 0 0 24px #e0b97355;
-      background: #222;
-      margin-bottom: 32px;
+    
+    header {
+      background: rgba(30, 30, 40, 0.98);
+      padding: 24px 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      text-align: center;
+      position: relative;
+      z-index: 10;
     }
-    .cards {
+    
+    header h1 {
+      font-size: 2rem;
+      color: var(--gold);
+      margin: 0;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    
+    header p {
+      color: var(--gray);
+      font-size: 0.9rem;
+      margin-top: 8px;
+    }
+    
+    .container {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      gap: 30px;
     }
-    @media (min-width: 700px) {
-      .cards {
-        flex-direction: row;
-        justify-content: space-between;
+    
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    
+    @media (min-width: 992px) {
+      .main-content {
+        grid-template-columns: 1fr 1fr;
       }
     }
-    .card {
-      background:rgba(34, 34, 44, 0.98);
+    
+    .video-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      position: relative;
+    }
+    
+    .camera-container {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
       border-radius: 16px;
-      box-shadow: 0 4px 24px #0002;
-      padding: 24px 18px;
-      flex: 1;
-      border: 1.5px solid #e0b97333;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
+    
+    video {
+      width: 100%;
+      display: block;
+      background: var(--darker);
+      transform: scaleX(-1);
+    }
+    
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    
+    .web-effect {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
+    
+    .analysis-section {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+    
+    .card {
+      background: rgba(34, 34, 44, 0.95);
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+    }
+    
     .card h2 {
-      color: #e0b973;
+      color: var(--gold);
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .card h2 i {
+      font-size: 1.1rem;
+    }
+    
+    .card p {
       margin-bottom: 10px;
+      color: var(--light);
     }
-    button {
-      margin-bottom: 32px;
-      padding: 10px 20px;
-      background: #e0b973;
-      color: #000;
-      font-weight: bold;
-      border: none;
+    
+    .card .highlight {
+      color: var(--gold);
+      font-weight: 500;
+    }
+    
+    .landmark-info {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+    
+    .landmark-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      background: rgba(255,255,255,0.05);
+      padding: 8px 12px;
       border-radius: 8px;
-      cursor: pointer;
     }
-    button:hover {
-      background: #fff;
+    
+    .landmark-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    
+    .measurement-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(255,255,255,0.1);
+    }
+    
+    .measurement-value {
+      font-weight: 500;
+      color: var(--gold);
+    }
+    
+    .product-link {
+      display: inline-block;
+      margin-top: 15px;
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 500;
+      transition: opacity 0.3s;
+      background: var(--gold-light);
+      padding: 10px 15px;
+      border-radius: 8px;
+    }
+    
+    .product-link:hover {
+      opacity: 0.8;
+    }
+    
+    .product-link i {
+      margin-left: 5px;
+    }
+    
+    .share-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+    
+    .share-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: none;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    
+    .share-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    
+    .whatsapp { background: #25D366; }
+    .instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+    .facebook { background: #3b5998; }
+    .link { background: var(--gold); }
+    
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: var(--gold);
+      animation: spin 1s ease-in-out infinite;
+      margin-left: 10px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .instructions {
+      text-align: center;
+      color: var(--gray);
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+    
+    .face-shape-display {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin: 15px 0;
+      padding: 10px;
+      background: var(--gold-light);
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .face-outline {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.8; }
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Hair by Marcio - Diagnóstico Facial</h1>
+    <h1>Hair by Marcio</h1>
+    <p>Diagnóstico Facial Avançado</p>
   </header>
-  <main>
-    <video id="video" autoplay muted playsinline></video>
-    <canvas id="canvas"></canvas>
 
-    <div class="cards">
-      <div class="card">
-        <h2>Formato do Rosto</h2>
-        <p id="formato-rosto">Aguardando avaliação...</p>
-      </div>
-      <div class="card">
-        <h2>Sugestão de Corte</h2>
-        <p id="sugestao-corte">Aguardando avaliação...</p>
-        <p id="sugestao-evitar"></p>
-      </div>
-      <div class="card">
-        <h2>Produto de Finalização</h2>
-        <p id="sugestao-produto">Aguardando avaliação...</p>
-        <a id="link-produto" href="#" target="_blank" rel="noopener">Ver no Mercado Livre</a>
-      </div>
+  <div class="container">
+    <div class="main-content">
+      <section class="video-section">
+        <div class="camera-container">
+          <video id="video" autoplay muted playsinline></video>
+          <canvas id="canvas"></canvas>
+          <canvas id="faceOutline" class="face-outline"></canvas>
+          <canvas id="webEffect" class="web-effect"></canvas>
+        </div>
+        
+        <div class="card">
+          <h2><i class="fas fa-map-marker-alt"></i> Pontos de Referência</h2>
+          <p>O sistema identifica 468 pontos faciais para análise precisa do seu formato de rosto.</p>
+          
+          <div class="landmark-info">
+            <div class="landmark-item">
+              <span class="landmark-color" style="background: #FF5252;"></span>
+              <span>Contorno Facial</span>
+            </div>
+            <div class="landmark-item">
+              <span class="landmark-color" style="background: #FFEB3B;"></span>
+              <span>Sobrancelhas</span>
+            </div>
+            <div class="landmark-item">
+              <span class="landmark-color" style="background: #4CAF50;"></span>
+              <span>Olhos</span>
+            </div>
+            <div class="landmark-item">
+              <span class="landmark-color" style="background: #2196F3;"></span>
+              <span>Nariz</span>
+            </div>
+            <div class="landmark-item">
+              <span class="landmark-color" style="background: #9C27B0;"></span>
+              <span>Boca</span>
+            </div>
+          </div>
+          
+          <p class="instructions">Posicione seu rosto na câmera e mantenha-se parado por alguns segundos.</p>
+        </div>
+      </section>
+
+      <section class="analysis-section">
+        <div class="card">
+          <h2><i class="fas fa-ruler-combined"></i> Análise Geométrica</h2>
+          <div class="face-shape-display" id="face-shape">
+            <span id="face-shape-text">Calculando formato do rosto...</span>
+            <span class="loading" id="face-shape-loading"></span>
+          </div>
+          
+          <div id="measurements">
+            <div class="measurement-item">
+              <span>Largura da testa:</span>
+              <span class="measurement-value" id="forehead-width">--</span>
+            </div>
+            <div class="measurement-item">
+              <span>Largura das bochechas:</span>
+              <span class="measurement-value" id="cheek-width">--</span>
+            </div>
+            <div class="measurement-item">
+              <span>Largura do maxilar:</span>
+              <span class="measurement-value" id="jaw-width">--</span>
+            </div>
+            <div class="measurement-item">
+              <span>Altura do rosto:</span>
+              <span class="measurement-value" id="face-height">--</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2><i class="fas fa-cut"></i> Sugestão de Estilo</h2>
+          <p class="highlight" id="hairstyle-suggestion">Aguardando análise facial...</p>
+          <p id="avoid-suggestion"></p>
+        </div>
+
+        <div class="card">
+          <h2><i class="fas fa-pump-soap"></i> Produtos Recomendados</h2>
+          <p id="product-suggestion">Aguardando análise facial...</p>
+          <a id="product-link" href="#" target="_blank" rel="noopener" class="product-link">
+            Ver produto recomendado <i class="fas fa-external-link-alt"></i>
+          </a>
+        </div>
+
+        <div class="share-buttons">
+          <button class="share-btn whatsapp" id="share-whatsapp" title="Compartilhar no WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+          </button>
+          <button class="share-btn instagram" id="share-instagram" title="Compartilhar no Instagram">
+            <i class="fab fa-instagram"></i>
+          </button>
+          <button class="share-btn facebook" id="share-facebook" title="Compartilhar no Facebook">
+            <i class="fab fa-facebook-f"></i>
+          </button>
+          <button class="share-btn link" id="copy-link" title="Copiar link">
+            <i class="fas fa-link"></i>
+          </button>
+        </div>
+      </section>
     </div>
-
-    <br>
-    <button id="salvar">Salvar resultado como imagem</button>
-  </main>
+  </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.min.js"></script>
@@ -112,129 +414,398 @@
 <script>
   const video = document.getElementById('video');
   const canvas = document.getElementById('canvas');
+  const faceOutline = document.getElementById('faceOutline');
+  const webCanvas = document.getElementById('webEffect');
   const ctx = canvas.getContext('2d');
+  const outlineCtx = faceOutline.getContext('2d');
+  const webCtx = webCanvas.getContext('2d');
+  let currentResultImage = null;
 
-  function distancia(a, b) {
-    return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));  
-  }
-  
-  function calculaFormatoRosto(landmarks) {
-    const larguraBochecha = distancia(landmarks[234], landmarks[454]);
-    const larguraTesta = distancia(landmarks[93], landmarks[323]);
-    const maxilar = distancia(landmarks[172], landmarks[397]);
-    const altura = distancia(landmarks[10], landmarks[152]);
+  // Cores para diferentes regiões faciais
+  const landmarkColors = {
+    contour: '#FF5252',
+    eyebrows: '#FFEB3B',
+    eyes: '#4CAF50',
+    nose: '#2196F3',
+    mouth: '#9C27B0',
+    outline: 'rgba(224, 185, 115, 0.7)',
+    webLine: 'rgba(224, 185, 115, 0.3)',
+    webPoint: 'rgba(224, 185, 115, 0.8)'
+  };
 
-    if (Math.abs(larguraBochecha - maxilar) < 0.05 && altura / larguraBochecha < 1.1) {
-      return "Redondo";
-    }
-    if (altura / larguraBochecha > 1.5) {
-      return "Retangular";
-    }
-    if (larguraBochecha > maxilar && larguraBochecha > larguraTesta) {
-      return "Diamante";
-    }
-    if (larguraTesta > larguraBochecha && larguraTesta > maxilar) {
-      return "Coração";
-    }
-    return "Oval";
-  }
-  
-  function sugestaoCorte(formato) {
-    const sugestoes = {
-      Oval: {corte:"Quase todos os estilos caem bem.",evitar:"Franjas muito pesadas."},
-      Redondo: {corte:"Cortes que criam volume no topo.",evitar:"Volume nas laterais."},
-      Coração: {corte:"Franja na testa e volume nas laterais.",evitar:"Topetes muito altos."},
-      Retangular: {corte:"Franja ou volume nas laterais.",evitar:"Cabelos muito puxados pra trás."},
-      Diamante: {corte:"Franja e volume nas laterais.",evitar:"Muito volume no topo."},
-    };
-    return sugestoes[formato] || {corte:'Corte médio, básico',evitar:'Não usar nada muito pesado'};
-  }
-  
-  function sugestaoProdutoFinalizacao(formato) {
-    const produtos = {
-      Oval: { nome:'Mousse Modelador', link:'https://www.mercadolivre.com.br/' },
-      Redondo: { nome:'Gel de Volume', link:'https://www.mercadolivre.com.br/' },
-      Coração: { nome:'Finalizador Leve', link:'https://www.mercadolivre.com.br/' },
-      Retangular: { nome:'Creme Texturizador', link:'https://www.mercadolivre.com.br/' },
-      Diamante: { nome:'Pomada Modeladora', link:'https://www.mercadolivre.com.br/' }
-    };
-    return produtos[formato] || { nome:'Produto Neutro', link:'https://www.mercadolivre.com.br/' };
-  }
-  
-  const faceMesh = new FaceMesh({ 
-    locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}` 
-  });
-  faceMesh.setOptions({ maxNumFaces: 1, refineLandmarks: true });
+  // Landmarks por região (índices baseados no MediaPipe Face Mesh)
+  const landmarkRegions = {
+    contour: [
+      10,  338, 297, 332, 284, 251, 389, 356, 454, 323,
+      361, 288, 397, 365, 379, 378, 400, 377, 152, 148,
+      176, 149, 150, 136, 172, 58, 132, 93, 234
+    ],
+    leftEyebrow: [70, 63, 105, 66, 107],
+    rightEyebrow: [336, 296, 334, 293, 300],
+    leftEye: [33, 160, 158, 133, 153, 144],
+    rightEye: [362, 385, 387, 263, 373, 380],
+    noseBridge: [168, 6, 197, 195, 5],
+    noseBottom: [2, 326, 327, 420, 351, 417, 285],
+    mouthOuter: [61, 185, 40, 39, 37, 267, 269, 270, 409, 291],
+    mouthInner: [78, 191, 80, 81, 82, 13, 312, 311, 310, 415]
+  };
 
-  faceMesh.onResults((results) => {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+  // Pontos estratégicos para o efeito de teia
+  const webLandmarks = [
+    10, 152, 93, 323, 234, 454, 172, 397,  // Contorno
+    168, 6, 197, 2,  // Nariz
+    33, 133, 362, 263,  // Olhos
+    61, 291, 78, 308  // Boca
+  ];
 
-    ctx.save();
-    ctx.translate(canvas.width, 0);
-    ctx.scale(-1, 1);
-    ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
-
-    if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
-      const landmarks = results.multiFaceLandmarks[0];
-      // Desenha contorno externo como pontilhado
-      ctx.strokeStyle = "#e0b973";
-      ctx.lineWidth = 2;
-      ctx.setLineDash([5, 5]);
+  function drawLandmarks(landmarks) {
+    // Limpa os canvases
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    outlineCtx.clearRect(0, 0, faceOutline.width, faceOutline.height);
+    webCtx.clearRect(0, 0, webCanvas.width, webCanvas.height);
+    
+    // Desenha o contorno estilizado primeiro
+    drawStylizedOutline(landmarks);
+    
+    // Desenha cada região com sua cor específica
+    Object.entries(landmarkRegions).forEach(([region, points]) => {
+      let color;
+      
+      if (region.includes('Eyebrow')) color = landmarkColors.eyebrows;
+      else if (region.includes('Eye')) color = landmarkColors.eyes;
+      else if (region.includes('nose')) color = landmarkColors.nose;
+      else if (region.includes('mouth')) color = landmarkColors.mouth;
+      else color = landmarkColors.contour;
+      
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      ctx.lineWidth = region.includes('Eye') || region.includes('mouth') ? 1.5 : 2;
+      
+      // Desenha linhas conectando os pontos
       ctx.beginPath();
-
-      [ 127, 34, 139, 50, 101, 11, 330, 279, 294, 278, 424, 396, 175, 152, 148, 7 ]
-      .forEach((i, idx, arr) => {
+      points.forEach((i, idx) => {
         const p = landmarks[i];
         const x = p.x * canvas.width;
         const y = p.y * canvas.height;
-        if (idx===0) ctx.moveTo(x, y);
+        
+        if (idx === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
+        
+        // Desenha pontos nos landmarks com efeito de pulsação
+        if (!region.includes('Eye') && !region.includes('mouth')) {
+          ctx.beginPath();
+          ctx.arc(x, y, 3, 0, 2 * Math.PI);
+          ctx.fill();
+          ctx.beginPath();
+          if (idx === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
       });
-
-      ctx.closePath();
+      
+      if (region.includes('contour') || region.includes('Eye') || region.includes('mouth')) {
+        ctx.closePath();
+      }
       ctx.stroke();
+    });
+    
+    // Desenha o efeito de teia
+    drawWebEffect(landmarks);
+  }
 
-      // Cálculo do rosto
-      const formado = calculaFormatoRosto(landmarks);
-      const { corte, evitar } = sugestaoCorte(formado);
-      const finalizacao = sugestaoProdutoFinalizacao(formado);
-  
-      document.getElementById('formato-rosto').innerText = formado;
-      document.getElementById('sugestao-corte').innerText = corte;
-      document.getElementById('sugestao-evitar').innerText = "Evitar: " + evitar;
-      document.getElementById('sugestao-produto').innerText = finalizacao.nome;
-      document.getElementById('link-produto').href = finalizacao.link;
+ 
+  function drawStylizedOutline(landmarks) {
+    // Configurar estilo de traço pontilhado
+    outlineCtx.lineWidth = 2;
+    outlineCtx.lineCap = 'round';
+    outlineCtx.lineJoin = 'round';
+    outlineCtx.setLineDash([5, 5]);
+    outlineCtx.strokeStyle = landmarkColors.outline;
 
-    } else {
-      document.getElementById('formato-rosto').innerText = "Rosto não detectado.";
-      document.getElementById('sugestao-corte').innerText = "Aguardando avaliação...";
-      document.getElementById('sugestao-evitar').innerText = "";
-      document.getElementById('sugestao-produto').innerText = "Aguardando avaliação...";
+    // Desenha o contorno principal como pontilhado
+    outlineCtx.beginPath();
+    landmarkRegions.contour.forEach((i, idx) => {
+      const p = landmarks[i];
+      const x = p.x * faceOutline.width;
+      const y = p.y * faceOutline.height;
+
+      if (idx === 0) outlineCtx.moveTo(x, y);
+      else outlineCtx.lineTo(x, y);
+    });
+    outlineCtx.closePath();
+    outlineCtx.stroke();
+
+    // Volta ao estilo normal pra outras linhas
+    outlineCtx.setLineDash([]);
+
+    // Desenha algumas linhas internas pra dar um estilo a mais
+    outlineCtx.lineWidth = 1;
+    outlineCtx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+    outlineCtx.shadowBlur = 0;
+
+    const oppositePoints = [
+      [10, 152],
+      [93, 323],
+      [234, 454],
+      [172, 397]
+    ];
+
+    oppositePoints.forEach(pair => {
+      const p1 = landmarks[pair[0]];
+      const p2 = landmarks[pair[1]];
+      outlineCtx.beginPath();
+      outlineCtx.moveTo(p1.x * faceOutline.width, p1.y * faceOutline.height);
+      outlineCtx.lineTo(p2.x * faceOutline.width, p2.y * faceOutline.height);
+      outlineCtx.stroke();
+    });
+  }
+
+  function drawWebEffect(landmarks) {
+    const MAX_DISTANCE = 150;
+    const points = [];
+    
+    // Coleta os pontos para a teia
+    webLandmarks.forEach(i => {
+      const p = landmarks[i];
+      points.push({
+        x: p.x * webCanvas.width,
+        y: p.y * webCanvas.height,
+        id: i
+      });
+    });
+    
+    // Desenha as conexões
+    webCtx.strokeStyle = landmarkColors.webLine;
+    webCtx.lineWidth = 0.5;
+    
+    for (let i = 0; i < points.length; i++) {
+      for (let j = i + 1; j < points.length; j++) {
+        const dx = points[i].x - points[j].x;
+        const dy = points[i].y - points[j].y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < MAX_DISTANCE) {
+          // Ajusta a opacidade baseada na distância
+          const opacity = 1 - (distance / MAX_DISTANCE);
+          webCtx.globalAlpha = opacity * 0.5;
+          
+          webCtx.beginPath();
+          webCtx.moveTo(points[i].x, points[i].y);
+          webCtx.lineTo(points[j].x, points[j].y);
+          webCtx.stroke();
+        }
+      }
     }
-    ctx.restore();
+    
+    // Desenha os pontos
+    webCtx.fillStyle = landmarkColors.webPoint;
+    webCtx.globalAlpha = 0.8;
+    points.forEach(point => {
+      webCtx.beginPath();
+      webCtx.arc(point.x, point.y, 2, 0, Math.PI * 2);
+      webCtx.fill();
+    });
+    
+    // Reseta a opacidade
+    webCtx.globalAlpha = 1.0;
+  }
+
+  function calculateFaceShape(landmarks) {
+    const foreheadWidth = distance(landmarks[93], landmarks[323]);
+    const cheekWidth = distance(landmarks[234], landmarks[454]);
+    const jawWidth = distance(landmarks[172], landmarks[397]);
+    const faceHeight = distance(landmarks[10], landmarks[152]);
+    
+    // Atualiza as medições na UI
+    document.getElementById('forehead-width').textContent = foreheadWidth.toFixed(1) + 'px';
+    document.getElementById('cheek-width').textContent = cheekWidth.toFixed(1) + 'px';
+    document.getElementById('jaw-width').textContent = jawWidth.toFixed(1) + 'px';
+    document.getElementById('face-height').textContent = faceHeight.toFixed(1) + 'px';
+    
+    // Razões para determinar o formato do rosto
+    const cheekToJawRatio = cheekWidth / jawWidth;
+    const faceRatio = faceHeight / cheekWidth;
+    
+    // Determina o formato do rosto
+    if (Math.abs(cheekWidth - jawWidth) < 5 && faceRatio < 1.3) {
+      return { shape: "Redondo", confidence: calculateConfidence(cheekWidth, jawWidth, faceHeight) };
+    }
+    if (faceRatio > 1.5) {
+      return { shape: "Retangular", confidence: calculateConfidence(cheekWidth, jawWidth, faceHeight) };
+    }
+    if (cheekToJawRatio > 1.2 && cheekWidth > foreheadWidth) {
+      return { shape: "Diamante", confidence: calculateConfidence(cheekWidth, jawWidth, faceHeight) };
+    }
+    if (foreheadWidth > cheekWidth && foreheadWidth > jawWidth) {
+      return { shape: "Coração", confidence: calculateConfidence(cheekWidth, jawWidth, faceHeight) };
+    }
+    return { shape: "Oval", confidence: calculateConfidence(cheekWidth, jawWidth, faceHeight) };
+  }
+
+  function calculateConfidence(cheekWidth, jawWidth, faceHeight) {
+    // Calcula uma pontuação de confiança baseada na variação das medidas
+    const variation = Math.abs(cheekWidth - jawWidth) / faceHeight;
+    return Math.max(0.7, 1 - (variation * 2));
+  }
+
+  function distance(a, b) {
+    return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+  }
+
+  function getHairstyleSuggestion(faceShape) {
+    const suggestions = {
+      Oval: {
+        suggestion: "Seu rosto oval é o mais versátil! Quase todos os estilos ficam harmoniosos.",
+        avoid: "Evite apenas franjas muito pesadas que podem alongar demais o rosto."
+      },
+      Redondo: {
+        suggestion: "Cortes com volume no topo e laterais mais rentes ajudam a alongar visualmente o rosto.",
+        avoid: "Evite cortes arredondados ou bob cuts que acentuam a forma circular."
+      },
+      Coração: {
+        suggestion: "Franjas laterais suaves e camadas que equilibram a testa mais larga com o queixo estreito.",
+        avoid: "Evite topetes altos ou cortes muito curtos que destacam demais a testa."
+      },
+      Retangular: {
+        suggestion: "Franjas ou cortes com volume nas laterais suavizam os ângulos marcantes.",
+        avoid: "Evite cabelos muito lisos e presos para trás ou cortes muito longos sem camadas."
+      },
+      Diamante: {
+        suggestion: "Franjas laterais e volume na altura do queixo ajudam a equilibrar as proporções.",
+        avoid: "Evite cortes muito curtos no topo ou rabos-de-cavalo muito altos."
+      }
+    };
+    
+    return suggestions[faceShape] || {
+      suggestion: "Um corte médio com camadas proporciona versatilidade para diferentes ocasiões.",
+      avoid: "Evite estilos muito extremos que podem desequilibrar suas proporções naturais."
+    };
+  }
+
+  function getProductSuggestion(faceShape) {
+    const products = {
+      Oval: {
+        name: "Mousse Texturizador para volume natural",
+        link: "https://www.mercadolivre.com.br/mousse-texturizador"
+      },
+      Redondo: {
+        name: "Gel de Alto Controle para definição precisa",
+        link: "https://www.mercadolivre.com.br/gel-alto-controle"
+      },
+      Coração: {
+        name: "Creme de Finalização Leve para modelagem suave",
+        link: "https://www.mercadolivre.com.br/creme-finalizacao-leve"
+      },
+      Retangular: {
+        name: "Pomada Modeladora para controle com naturalidade",
+        link: "https://www.mercadolivre.com.br/pomada-modeladora"
+      },
+      Diamante: {
+        name: "Spray de Volume para corpo e movimento",
+        link: "https://www.mercadolivre.com.br/spray-volume"
+      }
+    };
+    
+    return products[faceShape] || {
+      name: "Kit Completo de Estilização para diferentes ocasiões",
+      link: "https://www.mercadolivre.com.br"
+    };
+  }
+
+  const faceMesh = new FaceMesh({ 
+    locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
   });
 
+  faceMesh.setOptions({
+    maxNumFaces: 1,
+    refineLandmarks: true,
+    minDetectionConfidence: 0.5,
+    minTrackingConfidence: 0.5
+  });
+
+  faceMesh.onResults((results) => {
+    if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
+      const landmarks = results.multiFaceLandmarks[0];
+      
+      // Atualiza os tamanhos dos canvases para corresponder ao vídeo
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      faceOutline.width = video.videoWidth;
+      faceOutline.height = video.videoHeight;
+      webCanvas.width = video.videoWidth;
+      webCanvas.height = video.videoHeight;
+      
+      // Desenha os landmarks
+      drawLandmarks(landmarks);
+      
+      // Analisa o formato do rosto
+      const faceAnalysis = calculateFaceShape(landmarks);
+      document.getElementById('face-shape-text').textContent = `${faceAnalysis.shape} (${Math.round(faceAnalysis.confidence * 100)}% de confiança)`;
+      document.getElementById('face-shape-loading').style.display = 'none';
+      
+      // Sugestões de estilo
+      const styleSuggestion = getHairstyleSuggestion(faceAnalysis.shape);
+      document.getElementById('hairstyle-suggestion').textContent = styleSuggestion.suggestion;
+      document.getElementById('avoid-suggestion').textContent = `O que evitar: ${styleSuggestion.avoid}`;
+      
+      // Produtos recomendados
+      const productSuggestion = getProductSuggestion(faceAnalysis.shape);
+      document.getElementById('product-suggestion').textContent = `Recomendamos: ${productSuggestion.name}`;
+      document.getElementById('product-link').href = productSuggestion.link;
+      
+      // Captura a imagem para compartilhamento
+      if (!currentResultImage) {
+        html2canvas(document.querySelector('.camera-container')).then(canvas => {
+          currentResultImage = canvas.toDataURL('image/jpeg');
+        });
+      }
+    }
+  });
+
+  // Inicializa a câmera
   const camera = new Camera(video, {
     onFrame: async () => {
-      await faceMesh.send({ image: video });
+      await faceMesh.send({image: video});
     },
-    width: 480,
-    height: 360
+    width: 640,
+    height: 480
   });
-
   camera.start();
 
-  document.getElementById('salvar').addEventListener('click', () => {
-    html2canvas(document.querySelector('main')).then(canvas => {
-      const link = document.createElement('a');
-      link.href = canvas.toDataURL('image/png');
-      link.download = 'analise-facial.png';
-      link.click();
-    });
+  // Funções de compartilhamento
+  document.getElementById('share-whatsapp').addEventListener('click', () => {
+    if (currentResultImage) {
+      const text = encodeURIComponent(`Confira meu diagnóstico facial do Hair by Marcio! Formato do rosto: ${document.getElementById('face-shape-text').textContent}`);
+      window.open(`https://wa.me/?text=${text}`);
+    }
   });
 
-</script>
+  document.getElementById('share-instagram').addEventListener('click', () => {
+    alert('Para compartilhar no Instagram, salve a imagem e compartilhe via app.');
+  });
 
+  document.getElementById('share-facebook').addEventListener('click', () => {
+    if (currentResultImage) {
+      const text = encodeURIComponent(`Confira meu diagnóstico facial do Hair by Marcio!`);
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${text}`);
+    }
+  });
+
+  document.getElementById('copy-link').addEventListener('click', () => {
+    navigator.clipboard.writeText(window.location.href);
+    alert('Link copiado para a área de transferência!');
+  });
+
+  // Redimensionamento responsivo
+  window.addEventListener('resize', () => {
+    if (video.videoWidth) {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      faceOutline.width = video.videoWidth;
+      faceOutline.height = video.videoHeight;
+      webCanvas.width = video.videoWidth;
+      webCanvas.height = video.videoHeight;
+    }
+  });
+</script>
 </body>
 </html>
